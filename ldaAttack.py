@@ -7,6 +7,7 @@ import numpy as np
 import scipy.sparse as sp
 import os
 import time
+import outer_optimization as outer
 def findVariationalParams(M,datapath,param,alpha,K):
     ''' 
     Function to determine the variational parameters
@@ -57,59 +58,6 @@ def findVariationalParams(M,datapath,param,alpha,K):
     #Usage phi[d,v,k]=phisp[d*V+v,k]
     return eta,gamma,phisp,beta
 
-def findL2RiskGrad(eta,phi,ptarget):
-    '''
-    Computes gradient of L2 risk function
-    Input:
-    eta: KxV float ndarray
-    phi: DxVxK float ndarray
-    ptarget: KxV float ndarray
-             This is the attacker's desired distribution
-             Column sum = 1 for all rows
-    
-    Method: Use eq. 12,13,15 or combined form (above 17)
-    
-    Output:
-    gradRisk = DxV float ndarray
-    '''
-    D,V,K = phi.shape
-    gradRisk = np.zeros(D,V)
-
-    ################### CODE HERE #######################
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #####################################################
-    
-    return gradRisk
-
-def updateM(gradRisk,M,lam):
-    Mprime = np.zeros(M.shape)
-
-    ################### CODE HERE #######################
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #####################################################
-    
-    return Mprime
-
-def projectM(Mprime,M):
-    M_new = np.zeros(M.shape)
-
-    ################### CODE HERE #######################
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #                                                   #
-    #####################################################
-    
-    return M_new
 
 def preprocessWords(inputPath,corpusfile,stop_words):
     '''
