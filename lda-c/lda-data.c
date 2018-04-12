@@ -22,7 +22,8 @@
 corpus* read_data(char* data_filename)
 {
     FILE *fileptr;
-    int length, count, word, n, nd, nw;
+    int length, word, n, nd, nw;
+	float count;
     corpus* c;
 
     printf("reading data from %s\n", data_filename);
@@ -38,10 +39,10 @@ corpus* read_data(char* data_filename)
 	c->docs[nd].length = length;
 	c->docs[nd].total = 0;
 	c->docs[nd].words = malloc(sizeof(int)*length);
-	c->docs[nd].counts = malloc(sizeof(int)*length);
+	c->docs[nd].counts = malloc(sizeof(float)*length);
 	for (n = 0; n < length; n++)
 	{
-	    fscanf(fileptr, "%10d:%10d", &word, &count);
+	    fscanf(fileptr, "%10d:%10f", &word, &count);
 	    word = word - OFFSET;
 	    c->docs[nd].words[n] = word;
 	    c->docs[nd].counts[n] = count;
@@ -64,4 +65,4 @@ int max_corpus_length(corpus* c)
     for (n = 0; n < c->num_docs; n++)
 	if (c->docs[n].length > max) max = c->docs[n].length;
     return(max);
-}
+} 	

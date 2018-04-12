@@ -1,0 +1,335 @@
+reading data from MLPdatafiles/congCorp.lda-c
+number of docs    : 702
+number of terms   : 5794
+Loading seeds from lda-c/ldaseeds.txt
+initialized with document 1
+initialized with document 2
+initialized with document 3
+initialized with document 4
+initialized with document 5
+initialized with document 6
+initialized with document 7
+initialized with document 8
+initialized with document 9
+initialized with document 10
+**** em iteration 1 ****
+document 0
+alpha maximization : -6180776.15360   -62643.78826
+alpha maximization : -2223267.01104   -62589.18161
+alpha maximization : -769404.98409   -62439.30798
+alpha maximization : -236629.56728   -62021.53636
+alpha maximization : -42822.69544   -60816.20415
+alpha maximization : 26020.86205   -57194.03372
+alpha maximization : 48580.88545   -47002.64190
+alpha maximization : 54376.85237   -26548.46603
+alpha maximization : 55184.20330   -6390.25082
+alpha maximization : 55212.76834   -292.96028
+alpha maximization : 55212.82138   -0.57640
+alpha maximization : 55212.82138   -0.00000
+new alpha = 0.08606
+**** em iteration 2 ****
+document 0
+alpha maximization : -7026976.16492   -71191.26312
+alpha maximization : -2529163.72119   -71136.65120
+alpha maximization : -876535.61915   -70986.72861
+alpha maximization : -270639.40406   -70568.54821
+alpha maximization : -49936.48740   -69359.70285
+alpha maximization : 28788.95165   -65705.16381
+alpha maximization : 54939.32582   -55236.13628
+alpha maximization : 61936.50936   -33200.86747
+alpha maximization : 63017.77119   -9179.38084
+alpha maximization : 63066.02448   -549.13656
+alpha maximization : 63066.17217   -1.81100
+alpha maximization : 63066.17217   -0.00002
+alpha maximization : 63066.17217   -0.00000
+new alpha = 0.07673
+**** em iteration 3 ****
+document 0
+alpha maximization : -7751006.37637   -78504.69960
+alpha maximization : -2790896.68473   -78450.08409
+alpha maximization : -968199.20359   -78300.12805
+alpha maximization : -299738.74900   -77881.66824
+alpha maximization : -56022.19286   -76670.41655
+alpha maximization : 31160.82402   -72993.55982
+alpha maximization : 60391.28718   -62329.30400
+alpha maximization : 68435.67955   -39124.19228
+alpha maximization : 69772.33356   -11935.12496
+alpha maximization : 69842.58861   -863.67029
+alpha maximization : 69842.89468   -4.11374
+alpha maximization : 69842.89469   -0.00009
+alpha maximization : 69842.89469   0.00000
+new alpha = 0.07024
+**** em iteration 4 ****
+document 0
+alpha maximization : -8380808.31214   -84866.33531
+alpha maximization : -3018566.62664   -84811.71718
+alpha maximization : -1047933.25239   -84661.73673
+alpha maximization : -325050.79981   -84243.07289
+alpha maximization : -61315.30531   -83030.06136
+alpha maximization : 33225.91723   -79336.80689
+alpha maximization : 65140.19436   -68527.09734
+alpha maximization : 74106.94359   -44417.94636
+alpha maximization : 75679.33593   -14588.64463
+alpha maximization : 75772.73408   -1219.10747
+alpha maximization : 75773.26401   -7.65984
+alpha maximization : 75773.26404   -0.00030
+alpha maximization : 75773.26404   -0.00000
+new alpha = 0.06545
+**** em iteration 5 ****
+document 0
+alpha maximization : -8942400.93131   -90538.98803
+alpha maximization : -3221579.26580   -90484.36787
+alpha maximization : -1119031.84359   -90334.36855
+alpha maximization : -347621.37003   -89915.54685
+alpha maximization : -66034.80412   -88701.17236
+alpha maximization : 35068.53571   -84995.17391
+alpha maximization : 69378.83372   -74071.22938
+alpha maximization : 79175.42622   -49232.05044
+alpha maximization : 80967.41054   -17141.94158
+alpha maximization : 81084.62309   -1606.29025
+alpha maximization : 81085.44226   -12.57323
+alpha maximization : 81085.44231   -0.00076
+alpha maximization : 81085.44231   -0.00000
+new alpha = 0.06171
+**** em iteration 6 ****
+document 0
+alpha maximization : -9468193.52104   -95850.02429
+alpha maximization : -3411650.38497   -95795.40245
+alpha maximization : -1185598.06403   -95645.38747
+alpha maximization : -368753.04654   -95226.43487
+alpha maximization : -70453.19899   -94010.92901
+alpha maximization : 36794.52097   -90294.32254
+alpha maximization : 73350.13438   -79274.48755
+alpha maximization : 83929.01748   -53808.58838
+alpha maximization : 85933.76809   -19681.96781
+alpha maximization : 86075.98828   -2032.71656
+alpha maximization : 86077.17316   -19.16835
+alpha maximization : 86077.17326   -0.00168
+alpha maximization : 86077.17326   0.00000
+new alpha = 0.05858
+**** em iteration 7 ****
+document 0
+alpha maximization : -9923751.60493   -100451.62110
+alpha maximization : -3576332.11362   -100396.99795
+alpha maximization : -1243272.46184   -100246.97074
+alpha maximization : -387061.93565   -99827.91587
+alpha maximization : -74281.22771   -98611.52554
+alpha maximization : 38290.50077   -94886.60737
+alpha maximization : 76792.86119   -83791.12626
+alpha maximization : 88053.16957   -57821.68029
+alpha maximization : 90247.35008   -21992.57671
+alpha maximization : 90413.33942   -2454.48202
+alpha maximization : 90414.92881   -26.84312
+alpha maximization : 90414.92900   -0.00316
+alpha maximization : 90414.92900   0.00000
+new alpha = 0.05612
+**** em iteration 8 ****
+document 0
+alpha maximization : -10350062.26493   -104757.78938
+alpha maximization : -3730441.05711   -104703.16511
+alpha maximization : -1297244.07574   -104553.12743
+alpha maximization : -404195.33167   -104133.98497
+alpha maximization : -77863.37251   -102916.83667
+alpha maximization : 39690.83637   -99184.78244
+alpha maximization : 80015.95434   -88023.99317
+alpha maximization : 91916.63991   -61613.22935
+alpha maximization : 94292.00592   -24242.10823
+alpha maximization : 94481.98374   -2894.64585
+alpha maximization : 94484.03597   -36.01419
+alpha maximization : 94484.03628   -0.00548
+alpha maximization : 94484.03628   -0.00000
+new alpha = 0.05401
+**** em iteration 9 ****
+document 0
+alpha maximization : -10735397.61792   -108650.06568
+alpha maximization : -3869737.65167   -108595.44046
+alpha maximization : -1346028.14103   -108445.39404
+alpha maximization : -419681.90467   -108026.17836
+alpha maximization : -81101.12791   -106808.39616
+alpha maximization : 40956.87097   -103070.36474
+alpha maximization : 82930.28470   -91854.61447
+alpha maximization : 95411.81611   -65067.66137
+alpha maximization : 97953.96930   -26344.36433
+alpha maximization : 98167.06072   -3331.27504
+alpha maximization : 98169.60940   -46.23397
+alpha maximization : 98169.60987   -0.00873
+alpha maximization : 98169.60987   0.00000
+new alpha = 0.05223
+**** em iteration 10 ****
+document 0
+alpha maximization : -11098756.07153   -112320.35309
+alpha maximization : -4001089.71712   -112265.72704
+alpha maximization : -1392029.88909   -112115.67293
+alpha maximization : -434285.20722   -111696.39284
+alpha maximization : -84154.15556   -110478.05278
+alpha maximization : 42150.92844   -106734.75421
+alpha maximization : 85679.20497   -95470.37543
+alpha maximization : 98710.05092   -68346.88365
+alpha maximization : 101411.92469   -28383.87822
+alpha maximization : 101648.03624   -3777.36250
+alpha maximization : 101651.12741   -57.78580
+alpha maximization : 101651.12810   -0.01323
+alpha maximization : 101651.12810   -0.00000
+new alpha = 0.05065
+**** em iteration 11 ****
+document 0
+alpha maximization : -11393132.73623   -115293.85475
+alpha maximization : -4107505.24736   -115239.22808
+alpha maximization : -1429298.43036   -115089.16808
+alpha maximization : -446116.13145   -114669.83882
+alpha maximization : -86627.53699   -113451.07262
+alpha maximization : 43118.44821   -109703.74619
+alpha maximization : 87906.77792   -98402.05607
+alpha maximization : 101383.69989   -71017.97399
+alpha maximization : 104216.60920   -30075.18380
+alpha maximization : 104472.22867   -4163.55415
+alpha maximization : 104475.81627   -68.66370
+alpha maximization : 104475.81721   -0.01825
+alpha maximization : 104475.81721   -0.00000
+new alpha = 0.04945
+**** em iteration 12 ****
+document 0
+alpha maximization : -11677489.83126   -118166.14864
+alpha maximization : -4210298.75788   -118111.52139
+alpha maximization : -1465298.47507   -117961.45600
+alpha maximization : -457544.36058   -117542.08157
+alpha maximization : -89016.69850   -116322.92394
+alpha maximization : 44053.15283   -112571.89421
+alpha maximization : 90058.94075   -101235.80387
+alpha maximization : 103967.58271   -73609.62280
+alpha maximization : 106928.38514   -31740.80852
+alpha maximization : 107203.56664   -4557.88840
+alpha maximization : 107207.68521   -80.58693
+alpha maximization : 107207.68644   -0.02458
+alpha maximization : 107207.68644   -0.00000
+new alpha = 0.04834
+**** em iteration 13 ****
+document 0
+alpha maximization : -11932109.29120   -120738.06238
+alpha maximization : -4302342.27778   -120683.43463
+alpha maximization : -1497533.68680   -120533.36463
+alpha maximization : -467777.43416   -120113.95158
+alpha maximization : -91155.97832   -118894.45912
+alpha maximization : 44890.19743   -115140.25910
+alpha maximization : 91986.35161   -103774.64678
+alpha maximization : 106282.21252   -75939.28085
+alpha maximization : 109358.58090   -33257.94905
+alpha maximization : 109651.86888   -4928.86813
+alpha maximization : 109656.50801   -92.53814
+alpha maximization : 109656.50957   -0.03178
+alpha maximization : 109656.50957   -0.00000
+new alpha = 0.04739
+**** em iteration 14 ****
+document 0
+alpha maximization : -12161181.36305   -123051.92169
+alpha maximization : -4385150.55832   -122997.29351
+alpha maximization : -1526534.55818   -122847.21953
+alpha maximization : -476983.75997   -122427.77310
+alpha maximization : -93080.59202   -121207.99127
+alpha maximization : 45643.32480   -117451.04949
+alpha maximization : 93720.61569   -106059.85119
+alpha maximization : 108365.33776   -78042.12434
+alpha maximization : 111546.48674   -34642.98388
+alpha maximization : 111856.53441   -5277.14731
+alpha maximization : 111861.67990   -104.39139
+alpha maximization : 111861.68181   -0.03975
+alpha maximization : 111861.68181   -0.00000
+new alpha = 0.04656
+**** em iteration 15 ****
+document 0
+alpha maximization : -12399341.47939   -125457.57943
+alpha maximization : -4471244.11592   -125402.95082
+alpha maximization : -1556685.98780   -125252.87285
+alpha maximization : -486555.32492   -124833.39304
+alpha maximization : -95081.54231   -123613.32158
+alpha maximization : 46426.39569   -119853.63386
+alpha maximization : 95523.91228   -108436.76006
+alpha maximization : 110531.80683   -80235.03427
+alpha maximization : 113822.67488   -36102.59142
+alpha maximization : 114150.61271   -5653.89203
+alpha maximization : 114156.32436   -117.88993
+alpha maximization : 114156.32671   -0.04981
+alpha maximization : 114156.32671   -0.00000
+new alpha = 0.04574
+**** em iteration 16 ****
+document 0
+alpha maximization : -12649232.45534   -127981.73070
+alpha maximization : -4561578.31352   -127927.10166
+alpha maximization : -1588322.55989   -127777.01967
+alpha maximization : -496598.34229   -127357.50616
+alpha maximization : -97181.03196   -126137.14244
+alpha maximization : 47248.10438   -122374.68183
+alpha maximization : 97416.26914   -110931.82917
+alpha maximization : 112805.71506   -82542.90545
+alpha maximization : 116212.52986   -37654.99052
+alpha maximization : 116559.74226   -6065.30403
+alpha maximization : 116566.09308   -133.41765
+alpha maximization : 116566.09598   -0.06264
+alpha maximization : 116566.09598   -0.00000
+new alpha = 0.04490
+**** em iteration 17 ****
+document 0
+alpha maximization : -12915986.88326   -130676.21987
+alpha maximization : -4658008.55463   -130621.59039
+alpha maximization : -1622094.06813   -130471.50427
+alpha maximization : -507319.08819   -130051.95623
+alpha maximization : -99422.18086   -128831.29287
+alpha maximization : 48125.33565   -125065.98770
+alpha maximization : 99436.58080   -113596.43058
+alpha maximization : 115233.85206   -85014.00040
+alpha maximization : 118765.33104   -39335.06184
+alpha maximization : 119133.67886   -6522.73515
+alpha maximization : 119140.76483   -151.62716
+alpha maximization : 119140.76843   -0.07938
+alpha maximization : 119140.76843   -0.00000
+new alpha = 0.04404
+**** em iteration 18 ****
+document 0
+alpha maximization : -13229179.80647   -133839.78475
+alpha maximization : -4771226.05267   -133785.15478
+alpha maximization : -1661744.75643   -133635.06403
+alpha maximization : -519906.16889   -133215.47721
+alpha maximization : -102053.45871   -131994.47734
+alpha maximization : 49155.36934   -128225.97522
+alpha maximization : 101808.91511   -116726.34026
+alpha maximization : 118085.66323   -87924.64066
+alpha maximization : 121764.63440   -41336.82632
+alpha maximization : 122158.52278   -7083.90926
+alpha maximization : 122166.54420   -175.29551
+alpha maximization : 122166.54880   -0.10380
+alpha maximization : 122166.54880   -0.00000
+new alpha = 0.04307
+**** em iteration 19 ****
+document 0
+alpha maximization : -13517541.13416   -136752.52544
+alpha maximization : -4875467.06657   -136697.89502
+alpha maximization : -1698251.72555   -136547.80020
+alpha maximization : -531495.27159   -136128.17927
+alpha maximization : -104476.09159   -134906.88323
+alpha maximization : 50103.81502   -131135.56547
+alpha maximization : 103993.43809   -119609.38288
+alpha maximization : 120712.23705   -90612.98218
+alpha maximization : 124528.03300   -43206.83728
+alpha maximization : 124946.11752   -7623.64358
+alpha maximization : 124955.07181   -199.41002
+alpha maximization : 124955.07753   -0.13171
+alpha maximization : 124955.07753   -0.00000
+new alpha = 0.04222
+**** em iteration 20 ****
+document 0
+alpha maximization : -13774402.60417   -139347.08574
+alpha maximization : -4968321.05690   -139292.45495
+alpha maximization : -1730770.76445   -139142.35664
+alpha maximization : -541818.40453   -138722.70652
+alpha maximization : -106634.06456   -137501.15702
+alpha maximization : 50948.71440   -133727.42814
+alpha maximization : 105939.54169   -122178.46911
+alpha maximization : 123052.55254   -93014.14856
+alpha maximization : 126991.01920   -44893.61266
+alpha maximization : 127431.19615   -8123.03544
+alpha maximization : 127441.04122   -222.87583
+alpha maximization : 127441.04812   -0.16172
+alpha maximization : 127441.04812   -0.00000
+new alpha = 0.04149
+**** em iteration 21 ****
+document 0

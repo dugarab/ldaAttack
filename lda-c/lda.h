@@ -23,9 +23,9 @@
 typedef struct
 {
     int* words;
-    int* counts;
+    float* counts;
     int length;
-    int total;
+    float total;
 } document;
 
 

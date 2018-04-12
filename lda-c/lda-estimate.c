@@ -117,16 +117,20 @@ void save_phi(char* filename, double*** phi3d, int num_docs, int voc, int num_to
     {
       //fprintf(fileptr, "[");
       for (v=0;v<voc;v++){
-	fprintf(fileptr, "%5.10f", phi3d[d][v][0]);	  
-	for (k = 1; k < num_topics; k++)
-	  fprintf(fileptr, " %5.10f", phi3d[d][v][k]);
-	fprintf(fileptr,"\n");	
+	//fprintf(fileptr, "%5.10f", phi3d[d][v][0]);	  
+	for (k = 1; k < num_topics; k++){
+	  if (phi3d[d][v][k]!=0.0)
+	    fprintf(fileptr, "%d %d %d %5.10f\n",d,v,k,phi3d[d][v][k]);
+	  else
+	    continue;
+	}
+	//fprintf(fileptr,"\n");	
 	/* if (v<voc-1) */
 	/*   fprintf(fileptr,"],\n"); */
 	/* else */
 	/*   fprintf(fileptr,"]"); */
       }
-      fprintf(fileptr, "\n\n"); 
+	//fprintf(fileptr, "\n\n"); 
     }
     //fprintf(fileptr,"]");    
     fclose(fileptr);

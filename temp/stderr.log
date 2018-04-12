@@ -1,0 +1,1 @@
+lda: lda-inference.c:78: lda_inference: Assertion `!isnan(likelihood)' failed.
