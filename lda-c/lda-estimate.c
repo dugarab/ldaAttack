@@ -222,6 +222,7 @@ void run_em(char* start, char* directory, corpus* corpus)
 
     while (((converged < 0) || (converged > EM_CONVERGED) || (i <= 2)) && (i <= EM_MAX_ITER))
     {
+		if(i==1) break;
         i++; printf("**** em iteration %d ****\n", i);
         likelihood = 0;
         zero_initialize_ss(ss, model);

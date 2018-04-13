@@ -1,4 +1,5 @@
 import outer_optimization as outer
+import matplotlib.pyplot as plt
 from gensim import corpora, models, similarities,matutils
 import string
 from nltk.tokenize import word_tokenize
@@ -48,7 +49,7 @@ def findVariationalParams(M,datapath,param,alpha,K):
     print("Reading gamma")
     gamma = np.loadtxt(param+"/final.gamma")
     print("Reading eta")
-    eta = np.loadtxt(param+"/final.beta")
+    eta = np.exp(np.loadtxt(param+"/final.beta"))
     print("Estimating fee")
     fee = eta/(np.sum(eta,1).reshape(K,1)*0.1)
     return eta,gamma,phi,fee
@@ -94,7 +95,8 @@ def preprocessWords(inputPath,corpusfile,dcyfile,stop_words, nochange = True):
     if not nochange:
         for doc in corpus:
             doc.append((V,1))
-            V+=1
+        V+=1
+
     corpora.BleiCorpus.serialize(corpusfile,corpus)
     M = matutils.corpus2dense(corpus, num_terms=V, num_docs=D,
                               dtype=np.int32).T
@@ -107,10 +109,10 @@ def runLDA(corpusfile,dcyfile,num_topics):
     '''
     print("Running Vanilla LDA on current M")
     dcy = corpora.Dictionary.load(dcyfile)
-    print(dcy)
+    print(dcy)  
     tmp = dcy.token2id
     for key in tmp:
-        if tmp[key] == int(len(tmp)/2):
+        if tmp[key] == int((len(tmp)+1)/2):
             print ('Word to insert: ' + key)
             break
     
@@ -124,6 +126,20 @@ def runLDA(corpusfile,dcyfile,num_topics):
     return 0
 
 
+def permuteFee(fee,feestar,eta):
+    K,V = fee.shape
+    feeperm = np.zeros((K,V))
+    etaperm = np.zeros((K,V))
+    arr=[]
+    for i in xrange(K):
+        indices=np.argsort(np.linalg.norm(fee-feestar[i],1,1))
+        for j in indices:
+            if j not in arr:
+                feeperm[i]=fee[j]
+                etaperm[i] = eta[j]
+                arr.append(j)
+                break
+    return feeperm,etaperm
 
 t0=time.time()
 stop_words = stopwords.words('english')
@@ -148,14 +164,14 @@ K = 10
 M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words)
 runLDA(corpFile,dcyFile,K)
 
-M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words)
-##M_0 = np.concatenate((M_0, np.ones((M_0.shape[0],1),dtype = np.int32)), axis = 1)
+M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words,False)
+#M_0 = np.concatenate((M_0, np.ones((M_0.shape[0],1),dtype = np.int32)), axis = 1)
 #runLDA(corpFile,dcyFile,K)
 eta,gamma,phi,fee=findVariationalParams(M_0,corpFile,
                                         paramFolder,alpha,K)
 
 D,V,K = phi.shape
-
+print ("D=%d, V=%d, K=%d"%(D,V,K))
 '''
 We are poisoning our fee here to get the
 poisoned feestar
@@ -171,12 +187,14 @@ sum_row = np.sum(feestar[tmp1])
 feestar[tmp1] = feestar[tmp1]/sum_row
 
 ########################################
+eps = 0.005
 
 M = np.copy(M_0)
-M_new = outer.update(eta, phi, feestar, M_0, M)
+momentum = 0
+M_new, momentum = outer.update(eta, phi, fee,feestar, M_0, M,1,momentum)
 it=1
 a = []
-a.append(np.linalg.norm(fee-feestar)/np.linalg.norm(fee))
+a.append(0.5*np.linalg.norm(fee- feestar,'fro')**2)
 
 print("Error: %f"%(a[-1]))
 print ('Iteration %d complete'%it)
@@ -188,29 +206,70 @@ print ('Iteration %d complete'%it)
     optimisation (actual LDA) is done from blei's C code and we get eta, phi , gamma from there.
     Then outer optimisation minimises error between the fee obtained from the blei's LDA and our required feestar
 '''
-while(np.linalg.norm(fee-feestar)/np.linalg.norm(fee) > 0.000001 and it<15):
+##while(0.5*np.linalg.norm((abs(fee-feestar) - eps)*(abs(fee-feestar) - eps>0),'fro')**2 > 0.0000001 and it<5):
+##    M =(M_new)
+##    #print("M-M_projected = %f"%(np.linalg.norm(M_new - np.float32(M)))) 
+##    print('dimensions of M: %ix%i'%(M.shape[0], M.shape[1]))
+##    corpus = matutils.Dense2Corpus(M,documents_columns=False)
+##    corpora.BleiCorpus.serialize(corpFile,corpus)
+##    eta,gamma,phi,fee=findVariationalParams(M,corpFile,paramFolder,alpha,K)
+##    it+=1
+##    M_new = outer.update(eta,phi,feestar,M_0,M,it)
+##    print('Iteration %d complete'%it)
+##    a.append(0.5*np.linalg.norm((abs(fee-feestar) - eps)*(abs(fee-feestar) - eps>0),'fro')**2)
+##    print("norm(M-M_0): %.10f"%(np.linalg.norm(M_new-M_0,1)))
+##    print("Error: %.10f"%(a[-1]))
+##
+##
+##    
+##M_final = outer.project_to_int(M[:,:-1])
+###M_final = outer.project_to_int(M)
+##corpus = matutils.Dense2Corpus(M_final,
+##                               documents_columns=False)
+##corpora.BleiCorpus.serialize(corpFile,corpus)
+##runLDA(corpFile,dcyFile,K)
+##t1=time.time()
+##print ("Time taken = %f sec"%(t1-t0))
+
+while(np.linalg.norm(fee-feestar) > 0.000001 and it<25):
     M =(M_new)
     #print("M-M_projected = %f"%(np.linalg.norm(M_new - np.float32(M)))) 
     print('dimensions of M: %ix%i'%(M.shape[0], M.shape[1]))
     corpus = matutils.Dense2Corpus(M,documents_columns=False)
     corpora.BleiCorpus.serialize(corpFile,corpus)
     eta,gamma,phi,fee=findVariationalParams(M,corpFile,paramFolder,alpha,K)
-    it+=1
-    M_new = outer.update(eta,phi,feestar,M_0,M)
-    print('Iteration %d complete'%it)
-    a.append(np.linalg.norm(fee-feestar)/np.linalg.norm(fee))
-    print("norm(M-M_0): %f"%(np.linalg.norm(M_new-M_0,1)))
+    fee,eta = permuteFee(fee,feestar,eta)
+    a.append(0.5*np.linalg.norm(fee-feestar,'fro')**2)
     print("Error: %f"%(a[-1]))
+    feestar=np.copy(fee)
+    tmp1 = int(K/2)
+    tmp2 = int(V/2)
+    feestar[tmp1][tmp2]  = sorted(feestar[tmp1])[-3]
+
+    sum_row = np.sum(feestar[tmp1])
+
+    feestar[tmp1] = feestar[tmp1]/sum_row
+    it+=1
+    print('Iteration %d complete'%it)
+   
+    M_new,momentum = outer.update(eta,phi,fee,feestar,M_0,M,it,momentum)
+    print("norm(M-M_0): %f"%(np.linalg.norm(M_new-M_0,1)))
+    
 
 
     
-#M_final = outer.project_to_int(M[:,:-1])
-M_final = outer.project_to_int(M)
+M_final = outer.project_to_int(M[:,:-1])
 corpus = matutils.Dense2Corpus(M_final,
                                documents_columns=False)
 corpora.BleiCorpus.serialize(corpFile,corpus)
 runLDA(corpFile,dcyFile,K)
 t1=time.time()
 print ("Time taken = %f sec"%(t1-t0))
+
+
+plt.plot(a, range(len(a)), 'ro')
+#plt.axis([0, 6, 0, 20])
+plt.show()
+print(a)
 
 
