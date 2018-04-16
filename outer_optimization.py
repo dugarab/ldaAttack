@@ -38,7 +38,7 @@ def project_to_int( M_new):
 
 
 
-def calcGradient(eta, phi, fee, feestar, perm):
+def calcGradient(eta, phi, fee, feestar, loss_func_ind):
     D,V,K = phi.shape
     eta_sum = [0.0]*K
     eps = 0.005
@@ -56,20 +56,22 @@ def calcGradient(eta, phi, fee, feestar, perm):
     for i in range(len(d_arr)):
         d,v,k1 = [d_arr[i], v_arr[i], k_arr[i]]
         k = k1
-        
-        '''
-            the eps - l2 risk function
-            this is actually no good. gives a zero gradient
-        '''
-        M_grad[d][v] += sgn(fee[k,v] - feestar[k1][v]) * max(0,(abs(fee[k,v] - feestar[k][v]) - eps))\
-        *(1.0 - fee[k,v]) * phi[d, v, k]/eta_sum[k]
+        if loss_func_ind != 1:
 
-        '''
-            the  simple l2 risk function
-        '''
+            '''
+                the eps - l2 risk function
+                this is actually no good. gives a zero gradient
+            '''
+            M_grad[d][v] += sgn(fee[k,v] - feestar[k1][v]) * max(0,(abs(fee[k,v] - feestar[k][v]) - eps))\
+            *(1.0 - fee[k,v]) * phi[d, v, k]
+        else:
 
-        #feestar has not been permuted
-        #M_grad[d][v] += (fee[k,v] - feestar[k1][v])*(1.0 - fee[k,v]) * phi[d, v, k]
+            '''
+                the  simple l2 risk function
+            '''
+
+            #feestar has been permuted
+            M_grad[d][v] += (fee[k,v] - feestar[k1][v])*(1.0 - fee[k,v]) * phi[d, v, k]
 
 
     print('Gradient Calculated')
@@ -82,15 +84,15 @@ def sgn(a):
     else:
         return -1
 
-def update(eta, phi, fee, feestar, M_0, M,it,momentum,perm = []):
+def update(eta, phi, fee, feestar, M_0, M,it,loss_func_ind):
     D,V,K = phi.shape
-    if len(perm) == 0: perm = range(K)
+    #if len(perm) == 0: perm = range(K)
     beta = 0.95
     L = 600
     L_d = 10
     flag = True
     #projection onto the set M
-    M_grad = calcGradient(eta, phi, fee, feestar,perm)
+    M_grad = calcGradient(eta, phi, fee, feestar,loss_func_ind)
 
     eps = 10**-15
     norm_1 = np.linalg.norm(M_grad, 1)

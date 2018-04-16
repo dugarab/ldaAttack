@@ -121,33 +121,33 @@ if __name__=='__main__':
     eta,gamma,phi,fee=findVariationalParams(corpFile,paramFolder,D,V,alpha,K)
     vlda.print_topics(betaFile,vocabFile,dcyFile,init_out,nwords=20)
     ############### Start attacking the corpus ######################
-    eps = 0.005
+    
     M = np.copy(M_0)
-    momentum = 0
+    loss_func_ind = 1
     TOL = 0.0000001
     maxiter = 20
     it=1
     riskNorm,wordRank = [],[]
     #Inserting word with 500th rank in top 10 in Topic K/2
-    topicID,wordID = K/2,np.argsort(fee[K/2])[-500]
+    topicID,wordID = K/2,np.argsort(fee[K/2])[-250]
     feestar,w2i = generateTargetFee(fee,topicID,wordID,dcyFile)
     print("Attacking corpus to insert \'%s\' in topic no. %d\n"%(w2i,topicID))
-    M_new = outer.update(eta, phi, fee,feestar, M_0, M,1,momentum)
-    riskNorm.append(loss(fee,feestar,0))
+    M_new = outer.update(eta, phi, fee,feestar, M_0, M,1,loss_func_ind)
+    riskNorm.append(loss(fee,feestar,loss_func_ind))
     wordRank.append(rankOf(wordID,fee[topicID]))
     print("Rank of word \'%s\' = %d"%(w2i,wordRank[-1]))
     print("Risk function ||fee-feestar||: %f"%(riskNorm[-1]))
     print ('Iteration %d complete'%it)
     print ('************************************************************\n')
-    while(np.linalg.norm(fee-feestar) > TOL and it<maxiter):
+    while(loss(fee,feestar,loss_func_ind) > TOL and it<maxiter):
         M=M_new
         print('dimensions of M: %ix%i'%(M.shape[0], M.shape[1]))
         corpus = matutils.Dense2Corpus(M,documents_columns=False)
         corpora.BleiCorpus.serialize(corpFile,corpus)
         eta,gamma,phi,fee=findVariationalParams(corpFile,paramFolder,D,V,alpha,K)
         feestar,perm = permuteFee(feestar,fee)
-        riskNorm.append(loss(fee,feestar,0))
-        M_new= outer.update(eta,phi,fee,feestar,M_0,M,it,momentum)
+        riskNorm.append(loss(fee,feestar,loss_func_ind))
+        M_new= outer.update(eta,phi,fee,feestar,M_0,M,it,loss_func_ind)
         wordRank.append(rankOf(wordID,fee[perm[topicID]]))
         it+=1
         print("norm(M-M_0): %f"%(np.linalg.norm(M_new-M_0,1)))
@@ -162,11 +162,20 @@ if __name__=='__main__':
     vlda.print_topics(betaFile,vocabFile,dcyFile,final_out,nwords=20)
     t1=time.time()
     print ("Net Time taken = %f sec"%(t1-t0))
+
+	############### Start attacking the corpus ######################
+    plt.figure(1)
     plt.plot(range(1,len(riskNorm)+1),riskNorm, 'r')
-    plt.plot(range(1,len(rnk)+1),rnk,'b')
-    # plt.title("Loss function value with iterations")
-    # plt.xlabel("Iteration")
-    # plt.ylabel("Loss function norm")
+    plt.title("Loss function value with iterations")
+    plt.xlabel("Iteration")
+    plt.ylabel("Loss function norm")
+	
+    plt.figure(2)
+    plt.plot(range(1,len(wordRank)+1),wordRank,'b')
+    plt.title("Rank value with iterations")
+    plt.xlabel("Iteration")
+    plt.ylabel("Rank")
+    
     plt.show()
 
 
