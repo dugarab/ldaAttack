@@ -32,6 +32,7 @@ corpus* read_data(char* data_filename)
     c->num_terms = 0;
     c->num_docs = 0;
     fileptr = fopen(data_filename, "r");
+	printf("Initialised pointer");
     nd = 0; nw = 0;
     while ((fscanf(fileptr, "%10d", &length) != EOF))
     {
@@ -42,7 +43,7 @@ corpus* read_data(char* data_filename)
 	c->docs[nd].counts = malloc(sizeof(float)*length);
 	for (n = 0; n < length; n++)
 	{
-	    fscanf(fileptr, "%10d:%10f", &word, &count);
+	    fscanf(fileptr, "%16d:%16f", &word, &count);
 	    word = word - OFFSET;
 	    c->docs[nd].words[n] = word;
 	    c->docs[nd].counts[n] = count;
@@ -50,6 +51,10 @@ corpus* read_data(char* data_filename)
 	    if (word >= nw) { nw = word + 1; }
 	}
 	nd++;
+//	if(nd==702){
+//		printf("702 documents read");
+//	 	break;
+//	}
     }
     fclose(fileptr);
     c->num_docs = nd;

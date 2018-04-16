@@ -136,6 +136,28 @@ void save_phi(char* filename, double*** phi3d, int num_docs, int voc, int num_to
     fclose(fileptr);
 }
 
+void save_eta(char* filename, double** c, int K_new, int V_new)
+{
+    FILE* fileptr;
+    int  k,v;
+    fileptr = fopen(filename, "w");
+    //fprintf(fileptr, "[");
+    for (k = 0; k < K_new; k++)
+    {
+	fprintf(fileptr, "%5.10f", c[k][0]);
+	for (v = 1; v < V_new; v++)
+	{
+	    fprintf(fileptr, " %5.10f", c[k][v]);
+	}
+	fprintf(fileptr, "\n"); 
+	/* if (d<num_docs-1) */
+	/*   fprintf(fileptr, "],\n"); */
+	/* else */
+	/*   fprintf(fileptr, "]\n"); */
+    }
+    fclose(fileptr);
+}
+
 
 /*
  * run_em
@@ -222,7 +244,7 @@ void run_em(char* start, char* directory, corpus* corpus)
 
     while (((converged < 0) || (converged > EM_CONVERGED) || (i <= 2)) && (i <= EM_MAX_ITER))
     {
-		if(i==1) break;
+		//if(i==2) break;
         i++; printf("**** em iteration %d ****\n", i);
         likelihood = 0;
         zero_initialize_ss(ss, model);
@@ -279,6 +301,10 @@ void run_em(char* start, char* directory, corpus* corpus)
     sprintf(filename,"%s/final.phi",directory);
     printf("phi Dims = %d x %d x %d\n",corpus->num_docs,corpus->num_terms,model->num_topics);
     save_phi(filename, phi3d, corpus->num_docs,corpus->num_terms, model->num_topics);
+
+	sprintf(filename,"%s/final.eta",directory);
+    //printf("eta Dims = %d x %d x %d\n",corpus->num_docs,corpus->num_terms,model->num_topics);
+    save_eta(filename, ss->class_word,  model->num_topics,corpus->num_terms);
     //
 
     // output the word assignments (for visualization)

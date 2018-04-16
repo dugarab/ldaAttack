@@ -38,9 +38,10 @@ def findVariationalParams(M,datapath,param,alpha,K):
     # Ignore the os error that will come when no such file exists
     cmd2 = "mkdir "+param
     cmd3 = c_code+"lda est "+str(alpha)+" "+ str(K) +" "+ c_code + \
-          "settings.txt " + datapath + " manual="+c_code+"ldaseeds.txt " + param + " >stdout.log 2>stderr.log"
+          "settings.txt " + datapath + " manual="+c_code+"ldaseeds.txt " + param 
     os.system(cmd1)
     os.system(cmd2)
+    time.sleep(1)
     os.system(cmd3)
     print("Reading phi")
     p = np.loadtxt(param+"/final.phi")
@@ -49,10 +50,17 @@ def findVariationalParams(M,datapath,param,alpha,K):
     print("Reading gamma")
     gamma = np.loadtxt(param+"/final.gamma")
     print("Reading eta")
-    eta = np.exp(np.loadtxt(param+"/final.beta"))
+    fee = (np.loadtxt(param+"/final.beta"))
     print("Estimating fee")
-    fee = eta/(np.sum(eta,1).reshape(K,1)*0.1)
-    return eta,gamma,phi,fee
+    eta = (np.loadtxt(param+"/final.eta"))
+    return eta,gamma,phi,np.exp(fee)
+
+def loss(fee,feestar,num=1):
+    eps = 0.005
+    if num == 1:
+        return 0.5*np.linalg.norm(fee-feestar,'fro')**2
+    else:
+        return 0.5*np.linalg.norm((abs(fee-feestar) - eps)*(abs(fee-feestar) - eps>0),'fro')**2
 
 def preprocessWords(inputPath,corpusfile,dcyfile,stop_words, nochange = True):
     '''
@@ -102,19 +110,20 @@ def preprocessWords(inputPath,corpusfile,dcyfile,stop_words, nochange = True):
                               dtype=np.int32).T
     return M
 
-def runLDA(corpusfile,dcyfile,num_topics):
+def runLDA(corpusfile,dcyfile,num_topics,ind = -1):
     '''
     Do classical LDA on word matrix M using alpha, beta
     Plot the results
     '''
     print("Running Vanilla LDA on current M")
     dcy = corpora.Dictionary.load(dcyfile)
-    print(dcy)  
-    tmp = dcy.token2id
-    for key in tmp:
-        if tmp[key] == int((len(tmp)+1)/2):
-            print ('Word to insert: ' + key)
-            break
+    print(dcy)
+    if ind >0 :
+        tmp = dcy.token2id
+        for key in tmp:
+            if tmp[key] == int(ind):
+                print ('Word to insert: ' + key)
+                break
     
     corpus = corpora.BleiCorpus(corpusfile)
     #tfidf = models.TfidfModel(corpus, normalize=True)
@@ -122,24 +131,24 @@ def runLDA(corpusfile,dcyfile,num_topics):
     tfidf_corpus = corpus  #Remove this line to allow tfidf values
     lda = models.LdaModel(tfidf_corpus, id2word=dcy, 
                           num_topics=num_topics)
-    print(lda.print_topics(num_topics,num_words=10))
+    print(lda.print_topics(num_topics,num_words=20))
     return 0
 
 
-def permuteFee(fee,feestar,eta):
+def permuteFee(fee,fees_old):
     K,V = fee.shape
     feeperm = np.zeros((K,V))
-    etaperm = np.zeros((K,V))
+    perm = [0]*K
     arr=[]
     for i in xrange(K):
-        indices=np.argsort(np.linalg.norm(fee-feestar[i],1,1))
+        indices=np.argsort(np.linalg.norm(fee-fee_old[i],1,1))
         for j in indices:
             if j not in arr:
                 feeperm[i]=fee[j]
-                etaperm[i] = eta[j]
+                perm[i] = j
                 arr.append(j)
                 break
-    return feeperm,etaperm
+    return feeperm,perm
 
 t0=time.time()
 stop_words = stopwords.words('english')
@@ -164,7 +173,7 @@ K = 10
 M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words)
 runLDA(corpFile,dcyFile,K)
 
-M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words,False)
+M_0 = preprocessWords(pathnames,corpFile,dcyFile,stop_words)
 #M_0 = np.concatenate((M_0, np.ones((M_0.shape[0],1),dtype = np.int32)), axis = 1)
 #runLDA(corpFile,dcyFile,K)
 eta,gamma,phi,fee=findVariationalParams(M_0,corpFile,
@@ -176,10 +185,15 @@ print ("D=%d, V=%d, K=%d"%(D,V,K))
 We are poisoning our fee here to get the
 poisoned feestar
 '''
+
 #######################################
 feestar=np.copy(fee)
+
 tmp1 = int(K/2)
-tmp2 = int(V/2)
+tmp2 = np.argsort(fee[tmp1])[-250]
+
+ 
+
 feestar[tmp1][tmp2]  = sorted(feestar[tmp1])[-3]
 
 sum_row = np.sum(feestar[tmp1])
@@ -188,13 +202,13 @@ feestar[tmp1] = feestar[tmp1]/sum_row
 
 ########################################
 eps = 0.005
-
+lossfun = 2
 M = np.copy(M_0)
 momentum = 0
-M_new, momentum = outer.update(eta, phi, fee,feestar, M_0, M,1,momentum)
+M_new = outer.update(eta, phi, fee,feestar, M_0, M,1,momentum,range(K))
 it=1
 a = []
-a.append(0.5*np.linalg.norm(fee- feestar,'fro')**2)
+a.append(loss(fee,feestar,lossfun))
 
 print("Error: %f"%(a[-1]))
 print ('Iteration %d complete'%it)
@@ -230,44 +244,55 @@ print ('Iteration %d complete'%it)
 ##runLDA(corpFile,dcyFile,K)
 ##t1=time.time()
 ##print ("Time taken = %f sec"%(t1-t0))
-
-while(np.linalg.norm(fee-feestar) > 0.000001 and it<25):
+rankList = []
+fee_old = np.copy(fee)
+while(loss(fee,feestar,lossfun) > 0.000001 and it<25):
     M =(M_new)
     #print("M-M_projected = %f"%(np.linalg.norm(M_new - np.float32(M)))) 
     print('dimensions of M: %ix%i'%(M.shape[0], M.shape[1]))
     corpus = matutils.Dense2Corpus(M,documents_columns=False)
     corpora.BleiCorpus.serialize(corpFile,corpus)
     eta,gamma,phi,fee=findVariationalParams(M,corpFile,paramFolder,alpha,K)
-    fee,eta = permuteFee(fee,feestar,eta)
-    a.append(0.5*np.linalg.norm(fee-feestar,'fro')**2)
+    feestar,perm = permuteFee(feestar,fee)
+    
+    a.append(loss(fee,feestar,lossfun))
     print("Error: %f"%(a[-1]))
-    feestar=np.copy(fee)
-    tmp1 = int(K/2)
-    tmp2 = int(V/2)
-    feestar[tmp1][tmp2]  = sorted(feestar[tmp1])[-3]
-
-    sum_row = np.sum(feestar[tmp1])
-
-    feestar[tmp1] = feestar[tmp1]/sum_row
+    
+    
+    tmp_list  = sorted(fee[perm[tmp1]])
+    
+    word_val = fee[perm[tmp1]][tmp2]
+    
+    i = V  - 1
+    while(tmp_list[i] > word_val):
+        #print(str(tmp_list[i]) + "  ," + str(word_val))
+        i-=1
+    rankList.append(V-i)
+    if(rankList[-1] < 5): break
+    print('Rank : ' + str(rankList[-1]))
     it+=1
     print('Iteration %d complete'%it)
    
-    M_new,momentum = outer.update(eta,phi,fee,feestar,M_0,M,it,momentum)
+    M_new = outer.update(eta,phi,fee,feestar,M_0,M,it,momentum,perm)
     print("norm(M-M_0): %f"%(np.linalg.norm(M_new-M_0,1)))
     
+    
 
 
     
-M_final = outer.project_to_int(M[:,:-1])
+#M_final = outer.project_to_int(M[:,:-1])
+#M_final = outer.project_to_int(M)
+M_final = np.int32(M_new)    
 corpus = matutils.Dense2Corpus(M_final,
                                documents_columns=False)
 corpora.BleiCorpus.serialize(corpFile,corpus)
-runLDA(corpFile,dcyFile,K)
+runLDA(corpFile,dcyFile,K,tmp2)
 t1=time.time()
 print ("Time taken = %f sec"%(t1-t0))
 
 
-plt.plot(a, range(len(a)), 'ro')
+plt.plot(range(len(a)),a, 'ro')
+plt.plot(range(len(rankList)),rankList, '.')
 #plt.axis([0, 6, 0, 20])
 plt.show()
 print(a)
